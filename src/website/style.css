@@ -1,0 +1,57 @@
+html {
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  height: inherit;
+  font-family: monospace;
+}
+
+.title {
+  margin: 0 auto;
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 2px;
+  background-color: darkgray;
+  position: absolute;
+  bottom: 0;
+  margin: 5px 0px;
+}
+
+.row {
+  display: inline-block;
+  position: relative;
+  overflow-wrap: break-word;
+  margin: 5px 0px;
+}
+
+#editor {
+  display: flex;
+  align-items: stretch;
+  cursor: text;
+  background-color: #222222;
+  height: 85vh;
+  width: 85vw;
+  border: 1px solid black;
+  border-radius: 2px;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+#editor * {
+  color: white;
+}
+
+#editor-line-numbers {
+  width: 5%;
+}
+
+#editor-textbox {
+  width: 95%;
+}

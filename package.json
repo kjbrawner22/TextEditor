@@ -1,0 +1,16 @@
+{
+  "name": "texteditor",
+  "version": "1.0.0",
+  "description": "Simple text editor without using a text box",
+  "main": "src/electron/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "Kenny Brawner",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^11.1.1",
+    "electron-reloader": "^1.1.0"
+  }
+}
