@@ -25,10 +25,11 @@ body {
 }
 
 .row {
+  height: 25px;
   display: inline-block;
   position: relative;
   overflow-wrap: break-word;
-  margin: 5px 0px;
+  margin: 5px 1px;
 }
 
 #editor {

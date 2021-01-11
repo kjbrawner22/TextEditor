@@ -7,27 +7,36 @@ const specialChars = {
   ARROW_UP: 'ArrowUp',
   ARROW_RIGHT: 'ArrowRight',
   ARROW_DOWN: 'ArrowDown',
+  BACKSPACE: 'Backspace'
 };
 
 function handleKey(key) {
   if (key.length == 1) {
-    console.log(key);
     paragraph.textContent += key;
   } else {
+    var col = cursorInfo.col;
     if (key === specialChars.ARROW_RIGHT) {
-      cursorInfo.col += 1;
-      let left = cursorInfo.col * 8;
-      document.getElementsByClassName('cursor').item(0).style.left = left.toString() + 'px';
+      col += 1;
     } else if (key === specialChars.ARROW_LEFT) {
-      if (cursorInfo.col > 0) {
-        cursorInfo.col -= 1;
-        let left = cursorInfo.col * 8;
-        document.getElementsByClassName('cursor').item(0).style.left = left.toString() + 'px';
-      } 
+      if (col > 0) {
+        col -= 1;
+      }
+    } else if (key === specialChars.BACKSPACE) {
+      if (col > 0) {
+        text = paragraph.textContent;
+        paragraph.textContent = text.slice(0, text.length - 1);
+        col -= 1;
+      }
     }
 
-    console.log('special character.');
+    if (col != cursorInfo.col) {
+      cursorInfo.col = col;
+      let left = col * 7.8;
+      document.getElementsByClassName('cursor').item(0).style.left = left.toString() + 'px';
+    }
   }
+
+  console.log(key);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
