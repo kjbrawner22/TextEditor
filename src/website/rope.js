@@ -5,14 +5,10 @@
  * 
  * @api public
  */
-function Rope(str, parent) {
+function Rope(str, parent = null) {
   if (typeof str != 'string') {
     throw new TypeError('Type of `str` must be a string.');
-  }
-
-  if (typeof parent == 'undefined') {
-    parent = null;
-  } else if (typeof parent != 'rope') {
+  } else if ((parent != null) && (typeof parent != 'rope')) {
     throw new TypeError('Type of `parent` must be a rope or null');
   }
 
@@ -72,8 +68,28 @@ function adjustRope() {
  */
 Rope.prototype.insert = function(pos, str) {
   if (pos < 0 || pos > this.length) {
-    throw RangeError('pos index out of bounds.');
+    throw new RangeError('pos index out of bounds.');
+  } else if (typeof str != 'string') {
+    throw new TypeError('Type of `str` must be a string.');
   }
+
+  if (this._value != null) {
+    // leaf - insert string here
+    this._value = this._value.substring(0, pos) + str + this._value.substring(pos);
+    this._weight = this._value.length;
+    this.length = this._weight;
+  } else {
+    if (pos <= this._weight) {
+      this._left.insert(pos, str);
+    } else {
+      this._right.insert(pos - this._weight, str);
+    }
+
+    this._weight = this._left.length;
+    this.length = this._left.length + this._right.length;
+  }
+
+  adjustRope.call(this);
 }
 
 /**
@@ -83,7 +99,35 @@ Rope.prototype.insert = function(pos, str) {
  * @param {Number} end - exclusive ending index 
  */
 Rope.prototype.remove = function(start, end) {
+  if (start < 0 || start >= this.length) {
+    throw new RangeError('`start` out of range.');
+  } else if (end < 0 || end > this.length) {
+    throw new RangeError('`end` out of range.');
+  } else if (start >= end) {
+    return;
+  } else if (typeof end == 'undefined') {
+    end = this.length;
+  }
 
+  if (this._value != null) {
+    this._value = this._value.substring(0, start) + this._value.substring(end);
+    this.length = this._value.length;
+    this._weight = this.length;
+  } else {
+    if (end <= this._weight) {
+      // remove string that is entirely on the left side
+      this._left.remove(start, end);
+    } else if (start >= this._weight) {
+      this._right.remove(start - this._weight, end - this._weight);
+    } else {
+      this._left.remove(start);
+      this._right.remove(0, end);
+    }
+
+    this._weight = this._left.length;
+    this.length = this._left.length + this._right.length;
+    adjustRope.call(this);
+  }
 }
 
 /**
@@ -98,3 +142,5 @@ Rope.prototype.toString = function() {
 
   return this._left.toString() + this._right.toString();
 }
+
+export {Rope};

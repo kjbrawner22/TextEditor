@@ -1,3 +1,7 @@
+import {Rope} from './rope.js';
+
+var rope = new Rope('test');
+
 var paragraph = 0;
 
 var cursorInfo = {row: 0, col: 0};
@@ -10,12 +14,20 @@ const specialChars = {
   BACKSPACE: 'Backspace'
 };
 
-function handleKey(key) {
-  if (key.length == 1) {
-    paragraph.textContent += key;
+/**
+ * 
+ * @param {KeyboardEvent} event 
+ */
+function handleKey(event) {
+  var key = event.key;
+  var col = cursorInfo.col;
+  if (key.length == 1 && !(event.ctrlKey || event.altKey)) {
+    rope.insert(col, key);
+    paragraph.textContent = rope.toString();
+    col += 1;
   } else {
-    var col = cursorInfo.col;
     if (key === specialChars.ARROW_RIGHT) {
+      if (col < paragraph.textContent.length)
       col += 1;
     } else if (key === specialChars.ARROW_LEFT) {
       if (col > 0) {
@@ -23,17 +35,18 @@ function handleKey(key) {
       }
     } else if (key === specialChars.BACKSPACE) {
       if (col > 0) {
-        text = paragraph.textContent;
-        paragraph.textContent = text.slice(0, text.length - 1);
+        rope.remove(col - 1, col);
+        paragraph.textContent = rope.toString();
         col -= 1;
       }
     }
 
-    if (col != cursorInfo.col) {
-      cursorInfo.col = col;
-      let left = col * 7.8;
-      document.getElementsByClassName('cursor').item(0).style.left = left.toString() + 'px';
-    }
+  }
+
+  if (col != cursorInfo.col) {
+    cursorInfo.col = col;
+    let left = col * 7.8;
+    document.getElementsByClassName('cursor').item(0).style.left = left.toString() + 'px';
   }
 
   console.log(key);
@@ -43,8 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   paragraph = document.getElementById('text');
+  paragraph.textContent = rope.toString();
 
   document.addEventListener('keydown', event => {
-    handleKey(event.key);
+    handleKey(event);
   });
 });
